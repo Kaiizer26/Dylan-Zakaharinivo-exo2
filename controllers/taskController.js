@@ -1,4 +1,5 @@
 const Task = require('../models/Task');
+const TaskMySQL = require('../models/TaskMySQL');
 
 class TaskController {
     // afficher toutes les tâches
@@ -29,10 +30,15 @@ class TaskController {
         }
 
         try {
+            // sauvegarder dans MongoDB
             const newTask = await Task.create({ title: title });
+            
+            // sauvegarder dans MySQL
+            await TaskMySQL.add(newTask._id.toString(), title);
+            
             res.status(201).json({
                 success: true,
-                message: 'Tâche ajoutée avec succès',
+                message: 'Tâche ajoutée avec succès dans MongoDB et MySQL',
                 task: newTask
             });
         } catch (error) {
@@ -48,12 +54,16 @@ class TaskController {
         const id = req.params.id;
         
         try {
+            // supprimer de MongoDB
             const deletedTask = await Task.findByIdAndDelete(id);
 
             if (deletedTask) {
+                // supprimer de MySQL
+                await TaskMySQL.remove(id);
+                
                 res.json({
                     success: true,
-                    message: 'Tâche supprimée avec succès',
+                    message: 'Tâche supprimée avec succès de MongoDB et MySQL',
                     task: deletedTask
                 });
             } else {

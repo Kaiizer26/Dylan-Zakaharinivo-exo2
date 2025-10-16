@@ -4,10 +4,12 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const connectDB = require('./config/db');
+const { connectMySQL } = require('./config/mysql');
 const taskRoutes = require('./routes/taskRoutes');
 
-// connecter à la base de données
+// connecter aux bases de données
 connectDB();
+connectMySQL();
 
 // créer l'application express
 const app = express();

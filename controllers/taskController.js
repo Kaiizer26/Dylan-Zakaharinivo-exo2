@@ -1,20 +1,17 @@
-// controller - logique métier pour les tâches
-
 const Task = require('../models/Task');
 
-const taskController = {
+class TaskController {
     // afficher toutes les tâches
-    displayTasks: function(req, res) {
+    static displayTasks(req, res) {
         const allTasks = Task.getAll();
         res.json({
-            success: true,
             count: allTasks.length,
             tasks: allTasks
         });
-    },
+    }
 
     // ajouter une tâche
-    addTask: function(req, res) {
+    static addTask(req, res) {
         const title = req.body.title;
         
         if (!title || title.trim() === '') {
@@ -30,10 +27,10 @@ const taskController = {
             message: 'Tâche ajoutée avec succès',
             task: newTask
         });
-    },
+    }
 
     // supprimer une tâche
-    removeTask: function(req, res) {
+    static removeTask(req, res) {
         const id = req.params.id;
         const deletedTask = Task.remove(id);
 
@@ -50,6 +47,6 @@ const taskController = {
             });
         }
     }
-};
+}
 
-module.exports = taskController;
+module.exports = TaskController;

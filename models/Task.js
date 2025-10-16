@@ -1,35 +1,33 @@
-// model - gestion des données des tâches
+class Task {
+    // propriétés statiques pour stocker les données
+    static tasks = [];
+    static nextId = 1;
 
-let tasks = [];
-let nextId = 1;
-
-const Task = {
     // récupérer toutes les tâches
-    getAll: function() {
-        return tasks;
-    },
+    static getAll() {
+        return this.tasks;
+    }
 
     // ajouter une nouvelle tâche
-    add: function(title) {
+    static add(title) {
         const newTask = {
-            id: nextId,
-            title: title,
-            completed: false
+            id: this.nextId,
+            title: title
         };
-        tasks.push(newTask);
-        nextId++;
+        this.tasks.push(newTask);
+        this.nextId++;
         return newTask;
-    },
+    }
 
     // supprimer une tâche par son id
-    remove: function(id) {
-        const index = tasks.findIndex(task => task.id === parseInt(id));
+    static remove(id) {
+        const index = this.tasks.findIndex(task => task.id === parseInt(id));
         if (index !== -1) {
-            const deletedTask = tasks.splice(index, 1);
+            const deletedTask = this.tasks.splice(index, 1);
             return deletedTask[0];
         }
         return null;
     }
-};
+}
 
 module.exports = Task;

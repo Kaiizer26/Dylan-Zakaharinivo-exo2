@@ -1,16 +1,15 @@
-// routes - définition des endpoints de l'api
-
+//  définition des endpoints de l'api
 const express = require('express');
 const router = express.Router();
-const taskController = require('../controllers/taskController');
+const TaskController = require('../controllers/taskController');
 
 // get /api/tasks - afficher toutes les tâches
-router.get('/', taskController.displayTasks);
+router.get('/', TaskController.displayTasks);
 
 // post /api/tasks - ajouter une nouvelle tâche
-router.post('/', taskController.addTask);
+router.post('/', TaskController.addTask);
 
 // delete /api/tasks/:id - supprimer une tâche
-router.delete('/:id', taskController.removeTask);
+router.delete('/:id', TaskController.removeTask);
 
 module.exports = router;

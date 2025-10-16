@@ -1,33 +1,16 @@
-class Task {
-    // propriétés statiques pour stocker les données
-    static tasks = [];
-    static nextId = 1;
+const mongoose = require('mongoose');
 
-    // récupérer toutes les tâches
-    static getAll() {
-        return this.tasks;
+// définir le schéma de la tâche
+const taskSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true
     }
+}, {
+    timestamps: true
+});
 
-    // ajouter une nouvelle tâche
-    static add(title) {
-        const newTask = {
-            id: this.nextId,
-            title: title
-        };
-        this.tasks.push(newTask);
-        this.nextId++;
-        return newTask;
-    }
-
-    // supprimer une tâche par son id
-    static remove(id) {
-        const index = this.tasks.findIndex(task => task.id === parseInt(id));
-        if (index !== -1) {
-            const deletedTask = this.tasks.splice(index, 1);
-            return deletedTask[0];
-        }
-        return null;
-    }
-}
+// créer le modèle
+const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;

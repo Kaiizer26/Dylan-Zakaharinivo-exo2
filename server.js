@@ -1,8 +1,13 @@
 // serveur - point d'entrée de l'application
 
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const connectDB = require('./config/db');
 const taskRoutes = require('./routes/taskRoutes');
+
+// connecter à la base de données
+connectDB();
 
 // créer l'application express
 const app = express();
@@ -22,7 +27,7 @@ app.get('/', function(req, res) {
 app.use('/api/tasks', taskRoutes);
 
 // définir le port
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 // démarrer le serveur
 app.listen(PORT, function() {

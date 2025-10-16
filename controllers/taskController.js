@@ -2,16 +2,23 @@ const Task = require('../models/Task');
 
 class TaskController {
     // afficher toutes les tâches
-    static displayTasks(req, res) {
-        const allTasks = Task.getAll();
-        res.json({
-            count: allTasks.length,
-            tasks: allTasks
-        });
+    static async displayTasks(req, res) {
+        try {
+            const allTasks = await Task.find();
+            res.json({
+                count: allTasks.length,
+                tasks: allTasks
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la récupération des tâches'
+            });
+        }
     }
 
     // ajouter une tâche
-    static addTask(req, res) {
+    static async addTask(req, res) {
         const title = req.body.title;
         
         if (!title || title.trim() === '') {
@@ -21,29 +28,44 @@ class TaskController {
             });
         }
 
-        const newTask = Task.add(title);
-        res.status(201).json({
-            success: true,
-            message: 'Tâche ajoutée avec succès',
-            task: newTask
-        });
+        try {
+            const newTask = await Task.create({ title: title });
+            res.status(201).json({
+                success: true,
+                message: 'Tâche ajoutée avec succès',
+                task: newTask
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la création de la tâche'
+            });
+        }
     }
 
     // supprimer une tâche
-    static removeTask(req, res) {
+    static async removeTask(req, res) {
         const id = req.params.id;
-        const deletedTask = Task.remove(id);
+        
+        try {
+            const deletedTask = await Task.findByIdAndDelete(id);
 
-        if (deletedTask) {
-            res.json({
-                success: true,
-                message: 'Tâche supprimée avec succès',
-                task: deletedTask
-            });
-        } else {
-            res.status(404).json({
+            if (deletedTask) {
+                res.json({
+                    success: true,
+                    message: 'Tâche supprimée avec succès',
+                    task: deletedTask
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: 'Tâche non trouvée'
+                });
+            }
+        } catch (error) {
+            res.status(500).json({
                 success: false,
-                message: 'Tâche non trouvée'
+                message: 'Erreur lors de la suppression de la tâche'
             });
         }
     }

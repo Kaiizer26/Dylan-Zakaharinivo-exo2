@@ -2,40 +2,83 @@
 
 require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const connectDB = require('./config/db');
-const { connectMySQL } = require('./config/mysql');
+const { connectPostgreSQL } = require('./config/postgres');
 const taskRoutes = require('./routes/taskRoutes');
 
-// connecter aux bases de données
-connectDB();
-connectMySQL();
+// déterminer quelle base de données utiliser
+const DB_TYPE = process.env.DB_TYPE || 'mongodb';
 
-// créer l'application express
-const app = express();
+// fonction asynchrone pour démarrer le serveur
+async function startServer() {
+    try {
+        // connecter à la base de données choisie
+        if (DB_TYPE === 'postgres') {
+            console.log(' Connexion à PostgreSQL...');
+            await connectPostgreSQL();
+        } else {
+            console.log(' Connexion à MongoDB...');
+            await connectDB(); // attendre la connexion MongoDB
+        }
 
-// middleware pour parser le json
-app.use(express.json());
+        // créer l'application express
+        const app = express();
 
-// servir les fichiers statiques du dossier views
-app.use(express.static(path.join(__dirname, 'views')));
+        // middlewares pour parser le body AVANT les routes
+        app.use(express.json());
+        app.use(express.urlencoded({ extended: true }));
 
-// route de base - afficher la page html
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
+        // route de base
+        app.get('/', function(req, res) {
+            res.json({
+                message: '✅ API TodoList - Bienvenue',
+                endpoints: {
+                    getTasks: 'GET /api/tasks',
+                    addTask: 'POST /api/tasks',
+                    deleteTask: 'DELETE /api/tasks/:id'
+                },
+                database: DB_TYPE
+            });
+        });
 
-// utiliser les routes pour les tâches
-app.use('/api/tasks', taskRoutes);
+        // utiliser les routes pour les tâches
+        app.use('/api/tasks', taskRoutes);
 
-// définir le port
-const PORT = process.env.PORT;
+        // middleware pour les routes non trouvées
+        app.use(function(req, res) {
+            res.status(404).json({
+                success: false,
+                message: 'Route non trouvée'
+            });
+        });
+
+        // middleware de gestion des erreurs
+        app.use(function(err, req, res, next) {
+            console.error('❌ Erreur serveur:', err);
+            res.status(500).json({
+                success: false,
+                message: 'Erreur interne du serveur',
+                error: err.message
+            });
+        });
+
+        // définir le port
+        const PORT = process.env.PORT || 3000;
+
+        // démarrer le serveur
+        app.listen(PORT, function() {
+            console.log('===================================');
+            console.log(' Serveur démarré avec succès !');
+            console.log(' Port:', PORT);
+            console.log(' URL: http://localhost:' + PORT);
+            console.log(' Base de données:', DB_TYPE === 'postgres' ? 'PostgreSQL' : 'MongoDB');
+            console.log('===================================');
+        });
+    } catch (error) {
+        console.error(' Erreur au démarrage du serveur:', error.message);
+        process.exit(1);
+    }
+}
 
 // démarrer le serveur
-app.listen(PORT, function() {
-    console.log('===================================');
-    console.log('Serveur démarré avec succès !');
-    console.log('Port: ' + PORT);
-    console.log('URL: http://localhost:' + PORT);
-    console.log('===================================');
-});
+startServer();

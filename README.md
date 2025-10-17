@@ -16,7 +16,19 @@ Une API REST simple pour gérer une liste de tâches (Todolist) avec Express.js,
 npm install
 ```
 
-2. Créer un fichier `.env` à la racine du projet :
+2. Créer un fichier `.env` à partir du fichier `.env.sample` :
+
+**Windows (PowerShell)** :
+```powershell
+Copy-Item .env.sample .env
+```
+
+**Linux/Mac** :
+```bash
+cp .env.sample .env
+```
+
+Le fichier `.env` doit contenir :
 ```bash
 MONGO_URI=mongodb://localhost:27017/todolist
 PORT=3000

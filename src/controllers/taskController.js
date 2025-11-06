@@ -23,7 +23,7 @@ class TaskController {
                 database: DB_TYPE
             });
         } catch (error) {
-            console.error('❌ Erreur displayTasks:', error.message);
+            console.error('Erreur displayTasks:', error.message);
             res.status(500).json({
                 success: false,
                 message: 'Erreur lors de la récupération des tâches',
@@ -97,7 +97,7 @@ class TaskController {
                 });
             }
         } catch (error) {
-            console.error('❌ Erreur removeTask:', error.message);
+            console.error('Erreur removeTask:', error.message);
             res.status(500).json({
                 success: false,
                 message: 'Erreur lors de la suppression de la tâche',

@@ -31,7 +31,7 @@ async function startServer() {
         // route de base
         app.get('/', function(req, res) {
             res.json({
-                message: '✅ API TodoList - Bienvenue',
+                message: 'API TodoList - Bienvenue',
                 endpoints: {
                     getTasks: 'GET /api/tasks',
                     addTask: 'POST /api/tasks',
@@ -54,7 +54,7 @@ async function startServer() {
 
         // middleware de gestion des erreurs
         app.use(function(err, req, res, next) {
-            console.error('❌ Erreur serveur:', err);
+            console.error('Erreur serveur:', err);
             res.status(500).json({
                 success: false,
                 message: 'Erreur interne du serveur',

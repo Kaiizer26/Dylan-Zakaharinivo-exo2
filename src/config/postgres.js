@@ -22,15 +22,15 @@ async function connectPostgreSQL() {
     try {
         // tester la connexion
         const client = await pool.connect();
-        console.log('✅ PostgreSQL connecté avec succès');
-        console.log('📊 Base de données:', process.env.PG_DATABASE || 'todolist');
+        console.log('PostgreSQL connecté avec succès');
+        console.log('Base de données:', process.env.PG_DATABASE || 'todolist');
         client.release();
         
         // créer la table si elle n'existe pas
         await createTable();
     } catch (err) {
-        console.error('❌ Erreur de connexion PostgreSQL:', err.message);
-        console.error('💡 Vérifiez que PostgreSQL est démarré et que les credentials sont corrects');
+        console.error('Erreur de connexion PostgreSQL:', err.message);
+        console.error('Vérifiez que PostgreSQL est démarré et que les credentials sont corrects');
         throw err;
     }
 }
@@ -47,16 +47,16 @@ async function createTable() {
     
     try {
         await pool.query(query);
-        console.log('✅ Table "tasks" créée ou existe déjà');
+        console.log('Table "tasks" créée ou existe déjà');
     } catch (err) {
-        console.error('❌ Erreur création table:', err.message);
+        console.error('Erreur création table:', err.message);
         throw err;
     }
 }
 
 function getPool() {
     if (!pool) {
-        throw new Error('❌ Le pool PostgreSQL n\'est pas initialisé');
+        throw new Error('Le pool PostgreSQL n\'est pas initialisé');
     }
     return pool;
 }
@@ -65,7 +65,7 @@ function getPool() {
 async function closePool() {
     if (pool) {
         await pool.end();
-        console.log('🔌 Pool PostgreSQL fermé');
+        console.log('Pool PostgreSQL fermé');
     }
 }
 

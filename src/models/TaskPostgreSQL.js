@@ -12,10 +12,10 @@ class TaskPostgreSQL {
         
         try {
             const result = await pool.query(query, [title.trim()]);
-            console.log('✅ Tâche ajoutée dans PostgreSQL:', result.rows[0]);
+            console.log('Tâche ajoutée dans PostgreSQL:', result.rows[0]);
             return result.rows[0];
         } catch (error) {
-            console.error('❌ Erreur PostgreSQL add:', error.message);
+            console.error('Erreur PostgreSQL add:', error.message);
             throw new Error(`Impossible d'ajouter la tâche: ${error.message}`);
         }
     }
@@ -29,7 +29,7 @@ class TaskPostgreSQL {
             const result = await pool.query(query);
             return result.rows;
         } catch (error) {
-            console.error('❌ Erreur PostgreSQL getAll:', error.message);
+            console.error('Erreur PostgreSQL getAll:', error.message);
             throw new Error(`Impossible de récupérer les tâches: ${error.message}`);
         }
     }
@@ -43,7 +43,7 @@ class TaskPostgreSQL {
             const result = await pool.query(query, [id]);
             return result.rows[0] || null;
         } catch (error) {
-            console.error('❌ Erreur PostgreSQL getById:', error.message);
+            console.error('Erreur PostgreSQL getById:', error.message);
             throw new Error(`Impossible de récupérer la tâche: ${error.message}`);
         }
     }
@@ -61,7 +61,7 @@ class TaskPostgreSQL {
             const result = await pool.query(query, [title.trim(), id]);
             return result.rows[0] || null;
         } catch (error) {
-            console.error('❌ Erreur PostgreSQL update:', error.message);
+            console.error('Erreur PostgreSQL update:', error.message);
             throw new Error(`Impossible de mettre à jour la tâche: ${error.message}`);
         }
     }
@@ -74,11 +74,11 @@ class TaskPostgreSQL {
         try {
             const result = await pool.query(query, [id]);
             if (result.rows[0]) {
-                console.log('✅ Tâche supprimée de PostgreSQL:', result.rows[0]);
+                console.log('Tâche supprimée de PostgreSQL:', result.rows[0]);
             }
             return result.rows[0] || null;
         } catch (error) {
-            console.error('❌ Erreur PostgreSQL remove:', error.message);
+            console.error('Erreur PostgreSQL remove:', error.message);
             throw new Error(`Impossible de supprimer la tâche: ${error.message}`);
         }
     }

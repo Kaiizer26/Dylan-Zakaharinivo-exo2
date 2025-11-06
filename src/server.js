@@ -2,9 +2,32 @@
 
 require('dotenv').config();
 const express = require('express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const connectDB = require('./config/db');
 const { connectPostgreSQL } = require('./config/postgres');
 const taskRoutes = require('./routes/taskRoutes');
+
+// Configuration Swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API Todolist',
+            version: '1.0.0',
+            description: 'Simple API Todolist avec Express'
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+                description: 'Serveur local'
+            }
+        ],
+    },
+    apis: ['./src/routes/*.js'], // Fichiers contenant la documentation
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // déterminer quelle base de données utiliser
 const DB_TYPE = process.env.DB_TYPE || 'mongodb';
@@ -40,6 +63,9 @@ async function startServer() {
                 database: DB_TYPE
             });
         });
+
+        // Route pour la documentation Swagger
+        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
         // utiliser les routes pour les tâches
         app.use('/api/tasks', taskRoutes);

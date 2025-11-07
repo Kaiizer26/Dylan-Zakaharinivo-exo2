@@ -1,4 +1,6 @@
 const { Pool } = require('pg');
+const fs = require('fs');
+const path = require('path');
 
 // créer le pool immédiatement avec la configuration
 const pool = new Pool({

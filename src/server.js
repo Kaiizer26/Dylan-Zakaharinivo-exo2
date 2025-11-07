@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const connectDB = require('./config/db');
 const { connectPostgreSQL } = require('./config/postgres');
 const taskRoutes = require('./routes/taskRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 // Configuration Swagger
 const swaggerOptions = {
@@ -46,6 +47,9 @@ async function startServer() {
 
         // créer l'application express
         const app = express();
+        
+        // Middleware pour parser le JSON
+        app.use(express.json());
 
         // middlewares pour parser le body AVANT les routes
         app.use(express.json());
@@ -69,6 +73,9 @@ async function startServer() {
 
         // utiliser les routes pour les tâches
         app.use('/api/tasks', taskRoutes);
+
+        // utiliser les routes d'authentification
+        app.use('/api/auth', authRoutes);
 
         // middleware pour les routes non trouvées
         app.use(function(req, res) {

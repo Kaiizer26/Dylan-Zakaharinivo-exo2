@@ -8,6 +8,40 @@ const DB_TYPE = process.env.DB_TYPE || 'mongodb';
 const UserModel = DB_TYPE === 'postgres' ? UserPostgreSQL : User;
 
 const authController = {
+    getAccessResource: async (req, res) => {
+        try {
+            const authHeader = req.headers.authorization;
+            if (!authHeader) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Error! Token was not provided."
+                });
+            }
+
+            const token = authHeader.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Error! Token was not provided."
+                });
+            }
+
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+            return res.status(200).json({
+                success: true,
+                data: {
+                    userId: decodedToken.userId,
+                    email: decodedToken.email
+                }
+            });
+        } catch (error) {
+            return res.status(401).json({
+                success: false,
+                message: "Error! Invalid token."
+            });
+        }
+    },
+
     login: async (req, res, next) => {
         const { email, password } = req.body;
 
